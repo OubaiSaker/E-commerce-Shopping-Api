@@ -3,7 +3,7 @@ const express = require('express');
 const logger = require('morgan');
 const cors = require('cors')
 //import local module
-const errorHandler = require('../middleware/errorHandler');
+const errorHandler = require('../helpers/errorHandler');
 const usersRoute = require('../routes/usersRoute');
 
 module.exports = function (app) {
