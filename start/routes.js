@@ -10,19 +10,7 @@ module.exports = function (app) {
     app.use(express.urlencoded({ extended: true }));
     app.use(express.json());
     app.use(logger('dev'));
-    app.use(cors());
-
-    app.get('/', (req, res, next) => {
-        try {
-            res.status(200).json({
-                status: "success",
-                message: "your request receive"
-            })
-        }
-        catch (error) {
-            next(error);
-        }
-    });
+    // app.use(cors());
     //use local routes
     app.use('/users', usersRoute);
     app.use(errorHandler);
