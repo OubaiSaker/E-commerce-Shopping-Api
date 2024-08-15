@@ -20,3 +20,9 @@ module.exports.signUpValidator = [
         return true;
     })
 ]
+
+module.exports.signInValidator = [
+    check('email').not().isEmpty().withMessage("email is required"),
+    check('email').isEmail().withMessage("please enter avalid email"),
+    check('password').not().isEmpty().withMessage("password is required"),
+]
