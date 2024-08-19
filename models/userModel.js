@@ -23,23 +23,25 @@ const userSchema = new mongoose.Schema({
 
 userSchema.methods.generateAccessToken = function () {
     const payload = {
+        user_id: this._id,
         userName: this.userName,
         email: this.email,
         role: this.role
     }
 
-    const accessToken = jwt.sign(payload, process.env.SECRET_ACCESS_TOKEN, { expiresIn: '1m' });
+    const accessToken = jwt.sign(payload, process.env.SECRET_ACCESS_TOKEN, { expiresIn: '30m' });
     return accessToken;
 }
 
 userSchema.methods.generateRefreshToken = function () {
     const payload = {
+        user_id: this._id,
         userName: this.userName,
         email: this.email,
         role: this.role
     }
 
-    const refreshToken = jwt.sign(payload, process.env.SECRET_REFRESH_TOKEN, { expiresIn: '1d' });
+    const refreshToken = jwt.sign(payload, process.env.SECRET_REFRESH_TOKEN, { expiresIn: '30d' });
 
     return refreshToken;
 }
