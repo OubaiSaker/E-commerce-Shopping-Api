@@ -41,14 +41,66 @@ module.exports.signIn = async (user) => {
     return data;
 }
 
+module.exports.updateUser = async (user_id, updatedData) => {
+    try {
+        //updated user information
+        const newUser = {
+            userName: updatedData.userName,
+            email: updatedData.email,
+        };
+        //update user in data base
+        const updatedUser = await User.findByIdAndUpdate({ _id: user_id },
+            {
+                $set: newUser
+            },
+            { new: true }).select('-password -role');
+        //return data
+        return updatedUser;
+    }
+    catch (error) {
+        throw new Error(error);
+    }
+
+}
+
+module.exports.updatePassword = async (user_id, newPassword) => {
+    try {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        await User.updateOne({ _id: user_id },
+            { $set: { password: hashedPassword } }
+        );
+    }
+    catch (error) {
+        throw new Error(error);
+    }
+}
+
 module.exports.refreshToken = async (user_id) => {
     try {
-
         const user = await User.findById({ _id: user_id });
         const newAccessToken = user.generateAccessToken();
         return newAccessToken;
     }
     catch (error) {
-        next(error);
+        throw new Error(error);
+    }
+}
+
+module.exports.deleteUser = async (user_id) => {
+    try {
+        await UserRefreshToken.deleteMany({ user_id: user_id });
+        const deletedUser = await User.findByIdAndDelete({ _id: user_id });
+
+        if (deletedUser) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    catch (error) {
+        throw new Error(error);
     }
 }
