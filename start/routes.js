@@ -2,7 +2,7 @@
 const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
-const cookieParser = require('cookie-parser');
+const path = require('node:path');
 //import local module
 const errorHandler = require('../helpers/errorHandler');
 const usersRoute = require('../routes/usersRoute');
@@ -12,7 +12,7 @@ module.exports = function (app) {
     app.use(express.json());
     app.use(logger('dev'));
     app.use(cors());
-    app.use(cookieParser());
+    app.use(express.static(path.json(__dirname, 'public')))
     //use local routes
     app.use('/users', usersRoute);
     app.use(errorHandler);
