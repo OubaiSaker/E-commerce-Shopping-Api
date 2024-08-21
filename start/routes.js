@@ -12,7 +12,7 @@ module.exports = function (app) {
     app.use(express.json());
     app.use(logger('dev'));
     app.use(cors());
-    app.use(express.static(path.json(__dirname, 'public')))
+    app.use(express.static(path.join(__dirname, 'public')))
     //use local routes
     app.use('/users', usersRoute);
     app.use(errorHandler);
