@@ -6,6 +6,7 @@ const path = require('node:path');
 //import local module
 const errorHandler = require('../helpers/errorHandler');
 const usersRoute = require('../routes/usersRoute');
+const productsRoute = require('../routes/productsRoute');
 
 module.exports = function (app) {
     app.use(express.urlencoded({ extended: true }));
@@ -15,5 +16,6 @@ module.exports = function (app) {
     app.use(express.static(path.join(__dirname, 'public')))
     //use local routes
     app.use('/users', usersRoute);
+    app.use('/products', productsRoute);
     app.use(errorHandler);
 }
