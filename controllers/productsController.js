@@ -3,6 +3,11 @@ const productsServices = require('../services/productsServices');
 
 module.exports.getAllProducts = async (req, res, next) => {
     try {
+        let totalQuantity = 0;
+        const cart = req.user.cart;
+        if (cart) {
+            totalQuantity = cart.totalQuantity;
+        }
         const page = parseInt(req.query.page) || 1;
         const pageSize = parseInt(req.query.pageSize) || 3;
         if (page < 1 || pageSize < 1) {
@@ -15,7 +20,8 @@ module.exports.getAllProducts = async (req, res, next) => {
 
         return res.status(200).json({
             status: "success",
-            products: products
+            products: products,
+            totalQuantity: totalQuantity
         });
     }
     catch (error) {
