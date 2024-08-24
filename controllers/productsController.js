@@ -8,6 +8,7 @@ module.exports.getAllProducts = async (req, res, next) => {
         if (cart) {
             totalQuantity = cart.totalQuantity;
         }
+
         const page = parseInt(req.query.page) || 1;
         const pageSize = parseInt(req.query.pageSize) || 3;
         if (page < 1 || pageSize < 1) {
@@ -16,6 +17,7 @@ module.exports.getAllProducts = async (req, res, next) => {
                 message: 'Invalid page or pageSize value'
             });
         }
+
         const products = await productsServices.getAllProducts(page, pageSize);
 
         return res.status(200).json({

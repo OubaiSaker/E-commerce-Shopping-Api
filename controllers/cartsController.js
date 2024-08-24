@@ -3,6 +3,19 @@ const Product = require('../models/productModel');
 
 const cartsServices = require('../services/cartsServices');
 
+module.exports.getUserCart = async (req, res, next) => {
+    try {
+        const userCart = req.user.cart;
+        return res.status(200).json({
+            status: "success",
+            userCart: userCart
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+}
+
 module.exports.addToCart = async (req, res, next) => {
     try {
         const user_id = req.user.user_id;
