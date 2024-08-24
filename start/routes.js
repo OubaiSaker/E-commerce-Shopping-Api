@@ -5,6 +5,7 @@ const cors = require('cors');
 const path = require('node:path');
 //import local module
 const errorHandler = require('../helpers/errorHandler');
+const indexRoute = require('../routes/indexRoute');
 const usersRoute = require('../routes/usersRoute');
 const productsRoute = require('../routes/productsRoute');
 const cartsRoute = require('../routes/cartsRoute');
@@ -16,6 +17,8 @@ module.exports = function (app) {
     app.use(cors());
     app.use(express.static(path.join(__dirname, 'public')))
     //use local routes
+    app.use('/', indexRoute);
+    // app.use('/profile', profileRoute);
     app.use('/users', usersRoute);
     app.use('/products', productsRoute);
     app.use('/carts', cartsRoute)
