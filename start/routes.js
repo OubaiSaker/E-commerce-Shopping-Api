@@ -7,6 +7,7 @@ const path = require('node:path');
 const errorHandler = require('../helpers/errorHandler');
 const usersRoute = require('../routes/usersRoute');
 const productsRoute = require('../routes/productsRoute');
+const cartsRoute = require('../routes/cartsRoute');
 
 module.exports = function (app) {
     app.use(express.urlencoded({ extended: true }));
@@ -17,5 +18,6 @@ module.exports = function (app) {
     //use local routes
     app.use('/users', usersRoute);
     app.use('/products', productsRoute);
+    app.use('/carts', cartsRoute)
     app.use(errorHandler);
 }
