@@ -21,7 +21,7 @@ module.exports.createNewCart = async (user_id, product_id) => {
         });
         await newCart.save();
 
-        return newCart;
+        return newCart.totalQuantity;
     }
     catch (error) {
         throw new Error(error);
@@ -57,7 +57,7 @@ module.exports.addToCart = async (user_id, product_id, cart) => {
                 { $set: cart },
                 { new: true });
 
-            return updatedCart;
+            return updatedCart.totalQuantity;
         }
         else {
             //inserted product is already exist in user cart
@@ -70,10 +70,73 @@ module.exports.addToCart = async (user_id, product_id, cart) => {
                 { $set: cart },
                 { new: true });
 
-            return updatedCart;
+            return updatedCart.totalQuantity;
         }
     }
     catch (error) {
         throw new Error(error);
     }
 }
+
+module.exports.increaseItem = async (indexOfProduct, cart) => {
+    try {
+        //update user cart
+        const productPrice = cart.selectedProducts[indexOfProduct].price / cart.selectedProducts[indexOfProduct].productQuantity;
+        cart.selectedProducts[indexOfProduct].price += productPrice;
+        cart.selectedProducts[indexOfProduct].productQuantity += 1;
+        cart.totalPrice += productPrice;
+        cart.totalQuantity += 1;
+        //update user cart in data base
+        const updatedCart = await Cart.findByIdAndUpdate({ _id: cart._id },
+            { $set: cart },
+            { new: true });
+        //return updated user cart 
+        return updatedCart;
+    }
+    catch (error) {
+        throw new Error(error);
+    }
+}
+
+module.exports.decreaseItem = async (indexOfProduct, cart) => {
+    try {
+        //update user cart 
+        const productPrice = cart.selectedProducts[indexOfProduct].price / cart.selectedProducts[indexOfProduct].productQuantity;
+        cart.totalPrice -= productPrice;
+        cart.totalQuantity -= 1;
+        cart.selectedProducts[indexOfProduct].price -= productPrice;
+        cart.selectedProducts[indexOfProduct].productQuantity -= 1;
+        //update user cart in database
+        const updatedCart = await Cart.findByIdAndUpdate({ _id: cart._id },
+            { $set: cart },
+            { new: true });
+        //return updated user cart
+        return updatedCart;
+    }
+    catch (error) {
+        throw new Error(error);
+    }
+}
+
+module.exports.deleteItem = async (indexOfProduct, cart) => {
+    try {
+        if (cart.selectedProducts.length <= 1) {
+            await Cart.deleteOne({ _id: cart._id });
+            return null;
+        }
+        //update user cart 
+        cart.totalQuantity -= cart.selectedProducts[indexOfProduct].productQuantity;
+        cart.totalPrice -= cart.selectedProducts[indexOfProduct].price;
+        cart.selectedProducts.splice(indexOfProduct, 1);
+        //update user cart in database
+        const updatedCart = await Cart.findByIdAndUpdate({ _id: cart._id },
+            { $set: cart },
+            { new: true });
+        //return updated cart
+        return updatedCart;
+    }
+    catch (error) {
+        throw new Error(error);
+    }
+}
+
