@@ -17,7 +17,8 @@ module.exports.createNewCart = async (user_id, product_id) => {
             _id: user_id,
             totalQuantity: 1,
             totalPrice: newProduct.price,
-            selectedProducts: newProduct
+            selectedProducts: newProduct,
+            createAt: Date.now()
         });
         await newCart.save();
 
@@ -52,6 +53,7 @@ module.exports.addToCart = async (user_id, product_id, cart) => {
             cart.totalQuantity += 1;
             cart.totalPrice += newProduct.price;
             cart.selectedProducts.push(newProduct);
+            cart.createAt = Date.now();
 
             const updatedCart = await Cart.findByIdAndUpdate({ _id: user_id },
                 { $set: cart },
@@ -65,6 +67,7 @@ module.exports.addToCart = async (user_id, product_id, cart) => {
             cart.totalPrice += product.price;
             cart.selectedProducts[indexOfProduct].price += product.price;
             cart.selectedProducts[indexOfProduct].productQuantity += 1;
+            cart.createAt = Date.now();
 
             const updatedCart = await Cart.findByIdAndUpdate({ _id: user_id },
                 { $set: cart },
@@ -86,6 +89,7 @@ module.exports.increaseItem = async (indexOfProduct, cart) => {
         cart.selectedProducts[indexOfProduct].productQuantity += 1;
         cart.totalPrice += productPrice;
         cart.totalQuantity += 1;
+        cart.createAt = Date.now();
         //update user cart in data base
         const updatedCart = await Cart.findByIdAndUpdate({ _id: cart._id },
             { $set: cart },
@@ -106,6 +110,7 @@ module.exports.decreaseItem = async (indexOfProduct, cart) => {
         cart.totalQuantity -= 1;
         cart.selectedProducts[indexOfProduct].price -= productPrice;
         cart.selectedProducts[indexOfProduct].productQuantity -= 1;
+        cart.createAt = Date.now();
         //update user cart in database
         const updatedCart = await Cart.findByIdAndUpdate({ _id: cart._id },
             { $set: cart },
@@ -128,6 +133,7 @@ module.exports.deleteItem = async (indexOfProduct, cart) => {
         cart.totalQuantity -= cart.selectedProducts[indexOfProduct].productQuantity;
         cart.totalPrice -= cart.selectedProducts[indexOfProduct].price;
         cart.selectedProducts.splice(indexOfProduct, 1);
+        cart.createAt = Date.now();
         //update user cart in database
         const updatedCart = await Cart.findByIdAndUpdate({ _id: cart._id },
             { $set: cart },

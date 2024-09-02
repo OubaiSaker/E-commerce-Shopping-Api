@@ -20,6 +20,11 @@ const cartSchema = new mongoose.Schema({
     selectedProducts: {
         required: true,
         type: Array
+    },
+
+    createAt: {
+        type: Date,
+        index: { expires: '1m' }
     }
 });
 
