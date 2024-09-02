@@ -1,6 +1,6 @@
 const ordersServices = require('../services/ordersServices');
 
-module.exports.submitOrder = async (req, res, next) => {
+module.exports.submitUserOrder = async (req, res, next) => {
     try {
         const user_id = req.user.user_id;
         const user_cart = req.user.cart;
@@ -15,6 +15,23 @@ module.exports.submitOrder = async (req, res, next) => {
             status: "success",
             message: "your order has been add successfully",
             order: user_order
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+}
+
+module.exports.getUserOrders = async (req, res, next) => {
+    try {
+        const user_id = req.user.user_id;
+
+        const userOrders = await ordersServices.getUserOrders(user_id);
+
+        return res.status(200).json({
+            status: "success",
+            message: "get all your orders",
+            userOrders: userOrders
         });
     }
     catch (error) {

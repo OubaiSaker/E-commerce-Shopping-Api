@@ -7,6 +7,7 @@ const path = require('node:path');
 const errorHandler = require('../helpers/errorHandler');
 const indexRoute = require('../routes/indexRoute');
 const usersRoute = require('../routes/usersRoute');
+const profileRoute = require('../routes/profileRoute')
 const productsRoute = require('../routes/productsRoute');
 const cartsRoute = require('../routes/cartsRoute');
 const checkoutRoute = require('../routes/checkoutRoute');
@@ -19,8 +20,8 @@ module.exports = function (app) {
     app.use(express.static(path.join(__dirname, 'public')))
     //use local routes
     app.use('/', indexRoute);
-    // app.use('/profile', profileRoute);
     app.use('/users', usersRoute);
+    app.use('/profile', profileRoute);
     app.use('/products', productsRoute);
     app.use('/carts', cartsRoute);
     app.use('/checkout', checkoutRoute)
