@@ -1,5 +1,6 @@
 const Cart = require('../models/cartModel');
 const Product = require('../models/productModel');
+const User = require('../models/userModel');
 
 const cartsServices = require('../services/cartsServices');
 
@@ -152,11 +153,15 @@ module.exports.getCartInfoToCheckout = async (req, res, next) => {
         else {
             const totalPrice = userCart.totalPrice;
             const totalQuantity = userCart.totalQuantity;
+            const user_id = req.user.user_id;
+            const user = await User.findById({ _id: user_id })
+                .select('-password');
 
             return res.status(200).json({
                 status: "success",
                 totalPrice: totalPrice,
-                totalQuantity: totalQuantity
+                totalQuantity: totalQuantity,
+                user: user
             });
         }
     }

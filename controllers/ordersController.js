@@ -5,11 +5,12 @@ module.exports.submitUserOrder = async (req, res, next) => {
         const user_id = req.user.user_id;
         const user_cart = req.user.cart;
         const address = req.body.address;
+        const mobile = req.body.mobile;
         const name = req.user.userName;
         const paymentId = req.body.paymentId;
         const orderPrice = req.user.cart.totalPrice;
 
-        const user_order = await ordersServices.submitOrder(user_id, user_cart, address, name, paymentId, orderPrice);
+        const user_order = await ordersServices.submitUserOrder(user_id, user_cart, address, mobile, name, paymentId, orderPrice);
 
         return res.status(200).json({
             status: "success",

@@ -1,13 +1,13 @@
 const Order = require('../models/orderModel');
 const Cart = require('../models/cartModel')
 
-
-module.exports.submitUserOrder = async (user_id, user_cart, address, name, paymentId, orderPrice) => {
+module.exports.submitUserOrder = async (user_id, user_cart, address, mobile, name, paymentId, orderPrice) => {
     try {
         const order = new Order({
             user: user_id,
             cart: user_cart,
-            address: address,
+            address,
+            mobile,
             name,
             paymentId,
             orderPrice
