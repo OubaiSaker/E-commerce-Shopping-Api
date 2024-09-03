@@ -6,10 +6,19 @@ const cartsServices = require('../services/cartsServices');
 module.exports.getUserCart = async (req, res, next) => {
     try {
         const userCart = req.user.cart;
-        return res.status(200).json({
-            status: "success",
-            userCart: userCart
-        });
+
+        if (!userCart) {
+            return res.status(404).json({
+                status: "failed",
+                message: "your cart is empty"
+            });
+        }
+        else {
+            return res.status(200).json({
+                status: "success",
+                userCart: userCart
+            });
+        }
     }
     catch (error) {
         next(error);
@@ -50,13 +59,21 @@ module.exports.increaseItem = async (req, res, next) => {
         const indexOfProduct = req.params.index;
         const cart = req.user.cart;
 
-        const updatedCart = await cartsServices.increaseItem(indexOfProduct, cart);
+        if (!cart) {
+            return res.status(404).json({
+                status: "failed",
+                message: "your cart has been expired"
+            });
+        }
+        else {
+            const updatedCart = await cartsServices.increaseItem(indexOfProduct, cart);
 
-        return res.status(200).json({
-            status: "success",
-            message: "your cart has been updated successfully",
-            updatedCart: updatedCart
-        });
+            return res.status(200).json({
+                status: "success",
+                message: "your cart has been updated successfully",
+                updatedCart: updatedCart
+            });
+        }
     }
     catch (error) {
         next(error);
@@ -68,12 +85,21 @@ module.exports.decreaseItem = async (req, res, next) => {
         const indexOfProduct = req.params.index;
         const cart = req.user.cart;
 
-        const updatedCart = await cartsServices.decreaseItem(indexOfProduct, cart);
-        return res.status(200).json({
-            status: "success",
-            message: "your cart has been updated successfully",
-            updatedCart: updatedCart
-        });
+        if (!cart) {
+            return res.status(404).json({
+                status: "failed",
+                message: "your cart has been expired"
+            });
+        }
+        else {
+            const updatedCart = await cartsServices.decreaseItem(indexOfProduct, cart);
+
+            return res.status(200).json({
+                status: "success",
+                message: "your cart has been updated successfully",
+                updatedCart: updatedCart
+            });
+        }
     }
     catch (error) {
         next(error);
@@ -85,18 +111,52 @@ module.exports.deleteItem = async (req, res, next) => {
         const indexOfProduct = req.params.index;
         const cart = req.user.cart;
 
-        const updatedCart = await cartsServices.deleteItem(indexOfProduct, cart);
-        if (updatedCart) {
-            return res.status(200).json({
-                status: "success",
-                message: "your cart has been updated successfully",
-                updatedCart: updatedCart
+        if (!cart) {
+            return res.status(404).json({
+                status: "failed",
+                message: "your cart has been expired"
             });
         }
         else {
+            const updatedCart = await cartsServices.deleteItem(indexOfProduct, cart);
+            if (updatedCart) {
+                return res.status(200).json({
+                    status: "success",
+                    message: "your cart has been updated successfully",
+                    updatedCart: updatedCart
+                });
+            }
+            else {
+                return res.status(200).json({
+                    status: "success",
+                    message: "your cart is empty",
+                });
+            }
+        }
+    }
+    catch (error) {
+        next(error);
+    }
+}
+
+module.exports.getCartInfoToCheckout = async (req, res, next) => {
+    try {
+        const userCart = req.user.cart;
+
+        if (!userCart) {
+            return res.status(404).json({
+                status: "failed",
+                message: "your cart has been expired"
+            });
+        }
+        else {
+            const totalPrice = userCart.totalPrice;
+            const totalQuantity = userCart.totalQuantity;
+
             return res.status(200).json({
                 status: "success",
-                message: "your cart is empty",
+                totalPrice: totalPrice,
+                totalQuantity: totalQuantity
             });
         }
     }

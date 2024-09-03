@@ -24,7 +24,7 @@ const cartSchema = new mongoose.Schema({
 
     createAt: {
         type: Date,
-        index: { expires: '1m' }
+        index: { expires: '1d' }
     }
 });
 

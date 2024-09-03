@@ -14,6 +14,7 @@ const authAccessToken = async (req, res, next) => {
         const validAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
         //find user cart in database
         const user_id = validAccessToken.user_id;
+        //find user cart 
         const cart = await Cart.findById({ _id: user_id });
         //send user info in request
         req.user = validAccessToken;
