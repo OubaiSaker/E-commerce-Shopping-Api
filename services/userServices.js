@@ -47,6 +47,8 @@ module.exports.updateUser = async (user_id, updatedData) => {
         const newUser = {
             userName: updatedData.userName,
             email: updatedData.email,
+            mobile: updatedData.mobile,
+            address: updatedData.address
         };
         //update user in data base
         const updatedUser = await User.findByIdAndUpdate({ _id: user_id },

@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs')
 const User = require('../models/userModel');
 const UserRefreshToken = require('../models/userRefreshTokenModel');
 const userServices = require('../services/userServices');
+const ordersServices = require('../services/ordersServices')
 const verifyAccount = require('../helpers/emailVerification');
 
 module.exports.signUp = async (req, res, next) => {
@@ -62,6 +63,26 @@ module.exports.signIn = async (req, res, next) => {
                 accessToken: accessToken,
                 refreshToken: refreshToken
             });
+    }
+    catch (error) {
+        next(error);
+    }
+}
+
+module.exports.getCurrentUser = async (req, res, next) => {
+    try {
+        const user_id = req.user.user_id;
+        const user = await User.findById({ _id: user_id })
+            .select('-password ');
+
+        const userOrders = await ordersServices.getUserOrders(user_id);
+
+        return res.status(200).json({
+            status: "success",
+            message: "get current user",
+            currentUser: user,
+            userOrders: userOrders
+        });
     }
     catch (error) {
         next(error);

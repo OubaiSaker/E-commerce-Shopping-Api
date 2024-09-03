@@ -14,6 +14,9 @@ router.post('/signup',
 router.post('/signin',
     [signInValidator, validationRes],
     usersController.signIn);
+router.get('/profile',
+    authAccessToken,
+    usersController.getCurrentUser);
 router.put('/update',
     authAccessToken,
     [updateUserValidator, validationRes],

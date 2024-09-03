@@ -31,7 +31,7 @@ module.exports.updateUserValidator = [
     check('userName').not().isEmpty().withMessage("user naem is required"),
     check('userName').isLength({ min: 4 }).withMessage("user name must be at least contain 4 character"),
     check('email').not().isEmpty().withMessage("email is required"),
-    check('email').isEmail().withMessage("please enter avalid email"),
+    check('email').isEmail().withMessage("please enter avalid email")
 ]
 
 module.exports.updatePasswordValidator = [
