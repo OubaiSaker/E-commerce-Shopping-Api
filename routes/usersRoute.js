@@ -1,12 +1,13 @@
 //import remote module
 const express = require('express');
 const router = express.Router();
+//import local modules
 const authRefreshToken = require('../middleware/authRefreshToken');
 const authAccessToken = require('../middleware/authAccessToken');
-//import local modules
 const { signUpValidator, signInValidator, updateUserValidator, updatePasswordValidator } = require('../middleware/validator');
 const validationRes = require('../middleware/validationResult');
 const usersController = require('../controllers/usersController');
+const upload = require('../helpers/uploadAvater');
 
 router.post('/signup',
     [signUpValidator, validationRes],
@@ -17,6 +18,10 @@ router.post('/signin',
 router.get('/profile',
     authAccessToken,
     usersController.getCurrentUser);
+router.post('/profile/uploadAvater',
+    authAccessToken,
+    upload.single('myAvater'),
+    usersController.uploadAvater);
 router.put('/update',
     authAccessToken,
     [updateUserValidator, validationRes],

@@ -4,6 +4,7 @@ const UserRefreshToken = require('../models/userRefreshTokenModel');
 const userServices = require('../services/userServices');
 const ordersServices = require('../services/ordersServices')
 const verifyAccount = require('../helpers/emailVerification');
+const fs = require('node:fs');
 
 module.exports.signUp = async (req, res, next) => {
     try {
@@ -83,6 +84,55 @@ module.exports.getCurrentUser = async (req, res, next) => {
             currentUser: user,
             userOrders: userOrders
         });
+    }
+    catch (error) {
+        next(error);
+    }
+}
+
+module.exports.uploadAvater = async (req, res, next) => {
+    try {
+        const user = await User.findById({ _id: req.user.user_id })
+            .select('-password');
+        if (user.image === '/uploads/avater.jpeg') {
+            const imagePath = req.file.path.split('\\')[2];
+            const path = '/uploads/' + imagePath;
+            const user = await User.findByIdAndUpdate({ _id: req.user.user_id },
+                {
+                    $set: { image: path }
+                },
+                { new: true })
+                .select('-password');
+
+            return res.status(200).json({
+                status: "success",
+                message: "upload your avater successfully",
+                user: user
+            });
+        }
+        else {
+            const oldPath = 'public' + user.image;
+            fs.unlink(oldPath, async (err) => {
+                if (err) {
+                    throw new Error(err);
+                }
+
+                const imagePath = req.file.path.split('\\')[2];
+                const path = '/uploads/' + imagePath;
+                const user = await User.findByIdAndUpdate({ _id: req.user.user_id },
+                    {
+                        $set: { image: path }
+                    },
+                    { new: true }).select('-password');
+
+                return res.status(200).json({
+                    status: "success",
+                    message: "upload your avater successfully",
+                    user: user
+                });
+            })
+        }
+
     }
     catch (error) {
         next(error);
