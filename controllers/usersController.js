@@ -94,9 +94,11 @@ module.exports.uploadAvater = async (req, res, next) => {
     try {
         const user = await User.findById({ _id: req.user.user_id })
             .select('-password');
+
+        const imagePath = req.file.path.split('\\')[2];
+        const path = '/uploads/' + imagePath;
+
         if (user.image === '/uploads/avater.jpeg') {
-            const imagePath = req.file.path.split('\\')[2];
-            const path = '/uploads/' + imagePath;
             const user = await User.findByIdAndUpdate({ _id: req.user.user_id },
                 {
                     $set: { image: path }
@@ -116,9 +118,6 @@ module.exports.uploadAvater = async (req, res, next) => {
                 if (err) {
                     throw new Error(err);
                 }
-
-                const imagePath = req.file.path.split('\\')[2];
-                const path = '/uploads/' + imagePath;
                 const user = await User.findByIdAndUpdate({ _id: req.user.user_id },
                     {
                         $set: { image: path }
