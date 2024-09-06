@@ -5,6 +5,7 @@ const cors = require('cors');
 const path = require('node:path');
 //import local module
 const errorHandler = require('../helpers/errorHandler');
+const homeRoute = require('../routes/homeRoute');
 const indexRoute = require('../routes/indexRoute');
 const usersRoute = require('../routes/usersRoute');
 const productsRoute = require('../routes/productsRoute');
@@ -19,6 +20,7 @@ module.exports = function (app) {
     app.use(express.static(path.join(__dirname, 'public')))
     //use local routes
     app.use('/', indexRoute);
+    app.use('/home', homeRoute);
     app.use('/users', usersRoute);
     app.use('/products', productsRoute);
     app.use('/carts', cartsRoute);
