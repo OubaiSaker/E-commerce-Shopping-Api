@@ -5,6 +5,7 @@ const router = express.Router();
 const productsController = require('../controllers/productsController');
 const authAccessToken = require('../middleware/authAccessToken');
 const upload = require('../helpers/uploadProductImage');
+const isAdmin = require('../middleware/isAdmin');
 
 router.get('/',
     authAccessToken,
@@ -14,12 +15,17 @@ router.get('/:id',
     productsController.getSingleProduct);
 router.post('/addProduct',
     authAccessToken,
+    isAdmin,
     upload.single('productImage'),
     productsController.addProduct);
 router.put('/updateProduct/:id',
     authAccessToken,
+    isAdmin,
     upload.single('productImage'),
     productsController.updateProduct);
-router.delete('/deleteProduct/:id', authAccessToken, productsController.deleteProduct);
+router.delete('/deleteProduct/:id',
+    authAccessToken,
+    isAdmin,
+    productsController.deleteProduct);
 
 module.exports = router;
