@@ -39,3 +39,82 @@ module.exports.getUserOrders = async (req, res, next) => {
         next(error);
     }
 }
+
+module.exports.getAllOrders = async (req, res, next) => {
+    try {
+        const orders = await ordersServices.getAllOrders();
+
+        return res.status(200).json({
+            status: "success",
+            message: "all orders in database",
+            orders: orders
+        })
+    }
+    catch (error) {
+        next(error);
+    }
+}
+
+module.exports.getSingleOrder = async (req, res, next) => {
+    try {
+        const order_id = req.params.id;
+        const order = await ordersServices.getSingleOrder(order_id);
+        if (order) {
+            return res.status(200).json({
+                status: "success",
+                order: order
+            });
+        }
+        else {
+            return res.status(200).json({
+                status: "success",
+                message: "order not found"
+            });
+        }
+    }
+    catch (error) {
+        next(error);
+    }
+}
+
+module.exports.updateOrder = async (req, res, next) => {
+    try {
+        const order_id = req.params.id;
+        const updatedData = req.body;
+
+        const updatedOrder = await ordersServices.updateOrder(order_id, updatedData);
+
+        return res.status(200).json({
+            status: "success",
+            updatedOrder: updatedOrder
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+}
+
+module.exports.deleteOrder = async (req, res, next) => {
+    try {
+        const order_id = req.params.id;
+
+        const isDeleted = await ordersServices.deleteOrder(order_id);
+
+        if (isDeleted) {
+            return res.status(200).json({
+                status: "success",
+                message: "order Has been deleted successfully"
+            });
+        }
+        else {
+            return res.status(200).json({
+                status: "failed",
+                message: "order not found"
+            });
+        }
+
+    }
+    catch (error) {
+        next(error);
+    }
+}

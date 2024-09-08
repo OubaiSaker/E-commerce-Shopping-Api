@@ -10,6 +10,7 @@ const indexRoute = require('../routes/indexRoute');
 const usersRoute = require('../routes/usersRoute');
 const productsRoute = require('../routes/productsRoute');
 const cartsRoute = require('../routes/cartsRoute');
+const ordersRoute = require('../routes/ordersRoute');
 const checkoutRoute = require('../routes/checkoutRoute');
 
 module.exports = function (app) {
@@ -24,6 +25,7 @@ module.exports = function (app) {
     app.use('/users', usersRoute);
     app.use('/products', productsRoute);
     app.use('/carts', cartsRoute);
+    app.use('/orders', ordersRoute);
     app.use('/checkout', checkoutRoute)
     app.use(errorHandler);
 }
